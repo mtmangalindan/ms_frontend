@@ -1,0 +1,42 @@
+##### Stage 1
+
+FROM node:10.15.0 as builder
+
+WORKDIR /app
+
+# Copy project files to the docker image
+COPY . .
+
+# if you prefer npm, replace the above command with
+RUN npm install @angular/cli@latest -g
+
+RUN npm install
+
+ARG ORDER_API="http://localhost:8080/"
+ARG PRODUCT_API="http://localhost:8100/"
+ARG PAYMENT_API="http://localhost:8103/"
+ARG CUSTOMER_API="http://localhost:8101/"
+
+ENV ORDER_API=$ORDER_API
+ENV PRODUCT_API=$PRODUCT_API
+ENV PAYMENT_API=$PAYMENT_API
+ENV CUSTOMER_API=$CUSTOMER_API
+
+RUN ng build --prod
+
+#### STAGE 2
+#### Deploying the application
+
+FROM nginx:alpine
+
+VOLUME  /var/cache/nginx
+
+# Copy the build files from the project
+# replace "angular-docker-environment-variables" with your angular project name
+COPY --from=builder /app/dist/frontend /usr/share/nginx/html
+
+# Copy Nginx Files
+COPY --from=builder /app/dockerconfig/nginx.conf /etc/nginx/conf.d/default.conf
+
+# EXPOSE Port 80
+EXPOSE 80

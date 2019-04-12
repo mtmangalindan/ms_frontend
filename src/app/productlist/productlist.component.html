@@ -1,0 +1,48 @@
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<br><br>
+<div class="container">
+  
+    <div class="row">
+    	<div class="col-md-12">
+
+          <div *ngFor="let product of products">
+              
+        <div class="col-md-7 col-md-4">
+          
+            <div class="thumbnail" >
+              <h4 class="text-center"><span class="label label-info" style="background-color:black;"> 
+                  {{ product.prodName }}
+              </span></h4>
+              <img src={{product.prodImage}} class="img-responsive">
+              <div class="caption">
+                <div class="row">
+                  <div class="col-md-6 col-xs-6">
+                    <h4> <b>{{ (product.prodName.length>20) ?  (product.prodName | slice:0:20) +'..'  : (product.prodName)}}</b></h4>
+                  </div>
+                  <div class="col-md-6 col-xs-6 price">
+                    <h3>
+                    <label>{{product.prodPrice}} Gold</label></h3>
+                  </div>
+                </div>
+                <label style="margin-left:50px;">Order Quantity: &nbsp; </label>
+                    <input type="number" value="1" #qty
+                    style="width:50px;">
+                <div class="row">
+                  <br/>
+                  <div class="col-md-6">
+                    <a (click)="buy(product.prodId,qty.value)" class="btn btn-success btn-product"><span class="glyphicon glyphicon-shopping-cart"></span> Add to cart</a></div>
+                </div>
+
+                <p> </p>
+              </div>
+              </div>
+            </div>
+
+        </div>
+      </div>
+    </div>
+            
+<br> <br>

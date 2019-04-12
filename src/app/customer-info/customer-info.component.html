@@ -1,0 +1,103 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<div class='container'>
+    <div class='row' style='padding-top:25px; padding-bottom:25px;'>
+        <div class='col-md-12'>
+            <div id='mainContentWrapper'>
+                <div class="col-md-8 col-md-offset-2">
+                    <h2 style="text-align: center;">
+                        Order Summary
+                    </h2>
+                    <hr/>
+                    <a (click)="reset()" class="btn btn-info" style="width: 100%;">Shop Again</a>
+                    <hr/>
+                    <div class="shopping_cart">
+                            <div class="panel-group" id="accordion">
+                                <div class="panel panel-default" >
+
+                                    <div id="collapseOne" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div class="items">
+                                                <div class="col-md-9">
+                                                    <table class="table table-striped">
+                                                        <tr>
+                                                            <td colspan="2">                                        
+                                                                <b> Order List</b></td>
+                                                        </tr>
+                                                        <tr *ngFor="let item of prevCartMap | keyvalue">
+                                                            <td>
+                                                                <ul >
+                                                                    <li>{{ item.value.prodName }}
+                                                                        ({{ item.value.qty }}x)
+                                                                    </li>
+                                                                </ul>
+                                                            </td>
+                                                            <td>
+                                                                <b>$ {{ subTotal(item.value.prodId) }}</b>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div style="text-align: center;">
+                                                        <h3>Order Total</h3>
+                                                        <h3><span style="color:green;">$ {{ total() }}</span></h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                 <div class="shopping_cart">
+                            <div class="panel-group" id="accordion">
+                                <div class="panel panel-default" >
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Review
+                                                Customer Info</a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseOne" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div class="items">
+                                                <div class="col-md-9">
+                                                    <ul>
+                                                      <li>Name: {{ customer.first_name }}  {{ customer.last_name }}</li>
+                                                      <li>Street Line 1: {{ customer.street1 }}</li>
+                                                      <li>Street Line 2 : {{ customer.street2 }}</li>
+                                                      <li>Country : {{ customer.country }} </li>
+                                                      <li>City : {{ customer.city }} </li>
+                                                      <li>Postal Code : {{ customer.postal }} </li>
+                                                      <li>Email : {{ customer.email }} </li>    
+                                                    </ul>
+                                                </div>    
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <button class="btn btn-success btn-lg" style="margin:0 auto;width:100%;"
+                            (click)="Billout()">
+                                            Pay Now
+                        </button>
+                        <br/>
+                        <br>
+                        <button class="btn btn-success btn-lg" style="background-color:#CD5C5C;display: block;
+                        margin: 0 auto;width:100%"
+                            (click)="cancel()">
+                                            Cancel Order
+                        </button>
+                  
+                            
+                                
+  
+
+                                

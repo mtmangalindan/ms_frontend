@@ -1,0 +1,111 @@
+version: '3.7'
+services:
+  order_service:
+    container_name: order_service
+    restart: always
+    image: mtmangalindan/ms_order_service:v3
+    networks:
+      ms-network:
+        aliases:
+          - orderService
+    environment:
+      - MYSQL_ORDER_DB=ms_order_db
+      - MYSQL_DB_PORT=3306
+      - MYSQL_DB_SERVER=docker.for.win.localhost
+      - MYSQL_DB_USERNAME=admin
+      - MYSQL_DB_PASSWORD=admin
+      - CUSTOMER_SERVICE_SERVER=http://customerService
+      - PRODUCT_SERVICE_SERVER=http://productService
+      - PAYMENT_SERVICE_SERVER=http://paymentService
+      - ORDER_SERVICE_PORT=8080
+      - PAYMENT_SERVICE_PORT=8103
+      - PRODUCT_SERVICE_PORT=8100
+      - CUSTOMER_SERVICE_PORT=8101
+    ports:
+      - '8080:8080'
+    links:
+      - product_service
+      - customer_service
+  product_service:
+    container_name: product_service
+    restart: always
+    image: mtmangalindan/ms_product_service:v5
+    networks:
+      ms-network:
+        aliases:
+          - productService
+    environment:
+      - MYSQL_PRODUCT_DB=ms_product_db
+      - MYSQL_DB_PORT=3306
+      - MYSQL_DB_SERVER=docker.for.win.localhost
+      - MYSQL_DB_USERNAME=admin
+      - MYSQL_DB_PASSWORD=admin
+      - PRODUCT_SERVICE_PORT=8100
+    ports:
+      - '8100:8100'
+  customer_service:
+    container_name: customer_service
+    restart: always
+    image: mtmangalindan/ms_customer_service:v4
+    networks:
+      ms-network:
+        aliases:
+          - customerService
+    environment:
+      - MYSQL_CUSTOMER_DB=ms_customer_db
+      - MYSQL_DB_PORT=3306
+      - MYSQL_DB_SERVER=docker.for.win.localhost
+      - MYSQL_DB_USERNAME=admin
+      - MYSQL_DB_PASSWORD=admin
+      - CUSTOMER_SERVICE_PORT=8101
+    ports:
+      - '8101:8101'
+  payment_service:
+    container_name: payment_service
+    restart: always
+    image: mtmangalindan/ms_payment_service:v3
+    networks:
+      ms-network:
+        aliases:
+          - paymentService
+    environment:
+      - MYSQL_PAYMENT_DB=ms_payment_db
+      - MYSQL_DB_PORT=3306
+      - MYSQL_DB_SERVER=docker.for.win.localhost
+      - MYSQL_DB_USERNAME=admin
+      - MYSQL_DB_PASSWORD=admin
+      - CUSTOMER_SERVICE_SERVER=http://customerService
+      - PRODUCT_SERVICE_SERVER=http://productService
+      - ORDER_SERVICE_SERVER=http://orderService
+      - ORDER_SERVICE_PORT=8080
+      - PAYMENT_SERVICE_PORT=8103
+      - PRODUCT_SERVICE_PORT=8100
+      - CUSTOMER_SERVICE_PORT=8101
+    ports:
+      - '8103:8103'
+    links:
+      - order_service
+  front_end:
+    container_name: frontendv2
+    restart: always
+    build:
+      dockerfile: DockerFile
+      context: .
+      args: 
+        - CUSTOMER_API=http://localhost:8101
+        - PRODUCT_API=http://localhost:8100
+        - PAYMENT_API=http://localhost:8103
+        - ORDER_API=http://localhost:8080
+    networks: 
+      ms-network:
+        aliases:
+          - ms_frontend
+    ports:
+      - '4200:80'
+    links:
+      - order_service
+      - product_service
+      - customer_service
+      - payment_service
+networks: 
+  ms-network:
